@@ -1,28 +1,16 @@
-import React, { useState } from 'react'
+
+import { useState } from "react";
 import { IoIosAddCircleOutline } from "react-icons/io";
-import { NavLink } from 'react-router-dom';
-import TaskCard from '../../components/TaskCard/TaskCard';
+import { NavLink } from "react-router-dom";
+import TaskCard from "../../components/TaskCard/TaskCard";
+import type { Task, TaskFilter } from "../../types/task";
+import "./styles.css";
 
-const Tasks = () => {
-
-  type TaskType = 'All' | 'Pending' | 'Completed';
-  const [filter, setFilter] = useState<TaskType>('All');
-  
-  type TaskPriority = 'Low' | 'Medium' | 'High';
-  interface Tasks {
-    id: number;
-    title: string;
-    description: string;
-    dueDate: string;
-    priority: TaskPriority;
-    completed: boolean;
-  }
-  
-  const InitialTasks: Tasks[] = [
-    {
-      id: 1,
-      title: "Finish project proposal",
-      description: "Prepare the final proposal and send it to the team.",
+const initialTasks: Task[] = [
+  {
+    id: 1,
+    title: "Finish project proposal",
+    description: "Prepare the final proposal and send it to the team.",
     dueDate: "2026-10-15",
     priority: "High",
     completed: false,
@@ -83,39 +71,108 @@ const Tasks = () => {
     priority: "Low",
     completed: false,
   },
-]
-  
-const [filteredTasks, setFilteredTasks] = useState<Tasks[]>(InitialTasks);
+];
+
+const Tasks = () => {
+  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+  const [filter, setFilter] = useState<TaskFilter>("All");
+
+  const handleToggleTask = (id: number) => {
+    setTasks((currentTasks) =>
+      currentTasks.map((task) =>
+        task.id === id
+          ? { ...task, completed: !task.completed }
+          : task
+      )
+    );
+  };
+
+  const handleDeleteTask = (id: number) => {
+    setTasks((currentTasks) =>
+      currentTasks.filter((task) => task.id !== id)
+    );
+  };
+
+  const filteredTasks = tasks.filter((task) => {
+    if (filter === "Pending") {
+      return !task.completed;
+    }
+
+    if (filter === "Completed") {
+      return task.completed;
+    }
+
+    return true;
+  });
+
+  const pendingCount = tasks.filter(
+    (task) => !task.completed
+  ).length;
+
+  const completedCount = tasks.filter(
+    (task) => task.completed
+  ).length;
 
   return (
     <div className="tasks-container">
       <header className="tasks-header">
-        <h3>All Tasks</h3>
-        <button>
-          <IoIosAddCircleOutline /> 
-          <span>
-            <NavLink to='/create-task'>
-              New Task
-            </NavLink>
-          </span>
-        </button>
+        <h1>All Tasks</h1>
+
+        <NavLink to="/create-task" className="new-task-button">
+          <IoIosAddCircleOutline aria-hidden="true" />
+          <span>New Task</span>
+        </NavLink>
       </header>
 
-      <div className="tasks">
-        <div className="filter">
-          <span className={filter === "All" ? 'active' : ''} onClick={() => setFilter('All')}>All ({InitialTasks.length})</span>
-          <span className={filter === "Pending" ? 'active' : ''} onClick={() => setFilter('Pending')}>Pending ({ InitialTasks.filter((task) => !task.completed).length })</span>
-          <span className={filter === "Completed" ? 'active' : ''} onClick={() => setFilter('Completed')}>Completed ({ InitialTasks.filter((task) => task.completed).length }) </span>
+      <section className="tasks" aria-label="Task list">
+        <div className="filter" aria-label="Filter tasks">
+          <button
+            type="button"
+            className={filter === "All" ? "active" : ""}
+            aria-pressed={filter === "All"}
+            onClick={() => setFilter("All")}
+          >
+            All ({tasks.length})
+          </button>
+
+          <button
+            type="button"
+            className={filter === "Pending" ? "active" : ""}
+            aria-pressed={filter === "Pending"}
+            onClick={() => setFilter("Pending")}
+          >
+            Pending ({pendingCount})
+          </button>
+
+          <button
+            type="button"
+            className={filter === "Completed" ? "active" : ""}
+            aria-pressed={filter === "Completed"}
+            onClick={() => setFilter("Completed")}
+          >
+            Completed ({completedCount})
+          </button>
         </div>
 
         <div className="show-tasks">
-          {
-            
-          }
+          {filteredTasks.length > 0 ? (
+            filteredTasks.map((task) => (
+              <TaskCard
+                key={task.id}
+                task={task}
+                onToggle={handleToggleTask}
+                onDelete={handleDeleteTask}
+              />
+            ))
+          ) : (
+            <p className="empty-tasks">
+              No {filter.toLowerCase()} tasks found.
+            </p>
+          )}
         </div>
-      </div>
+      </section>
     </div>
-  )
-}
+  );
+};
 
-export default Tasks
+export default Tasks;
