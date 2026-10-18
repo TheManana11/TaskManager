@@ -1,7 +1,6 @@
 
 import {
   FiCheck,
-  FiCheckCircle,
   FiEye,
   FiLock,
   FiMail,
@@ -14,7 +13,33 @@ import {
 
 import "./styles.css";
 
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { signupSchema, type SignupFormValues } from '../../schemas/signupSchema';
+
 const Signup = () => {
+
+  const navigate = useNavigate();
+
+  const {
+  register,
+  handleSubmit,
+  formState: { errors },
+  reset,
+} = useForm<SignupFormValues>({
+  resolver: zodResolver(signupSchema),
+  mode: "onTouched",
+});
+
+const onSubmit = (data: SignupFormValues) => {
+  console.log("Signup data:", data);
+  reset();
+  navigate("/dashboard");
+};
+
+
   return (
     <main className="signup-page">
       <section className="signup-visual-panel">
@@ -77,61 +102,6 @@ const Signup = () => {
             </div>
           </div>
         </div>
-
-        <div className="signup-illustration-card">
-          <div className="signup-illustration-top">
-            <div>
-              <span className="signup-illustration-label">
-                YOUR PROGRESS
-              </span>
-              <h3>A productive day</h3>
-            </div>
-            <div className="signup-illustration-check">
-              <FiCheckCircle />
-            </div>
-          </div>
-
-          <div className="signup-progress-track">
-            <div className="signup-progress-fill" />
-          </div>
-
-          <div className="signup-progress-footer">
-            <span>You're building momentum</span>
-            <strong>75%</strong>
-          </div>
-
-          <div className="signup-mini-tasks">
-            <div className="signup-mini-task">
-              <span className="signup-mini-check">
-                <FiCheck />
-              </span>
-              <span className="signup-mini-task-done">
-                Plan your priorities
-              </span>
-              <span className="signup-mini-task-status">Done</span>
-            </div>
-
-            <div className="signup-mini-task">
-              <span className="signup-mini-check">
-                <FiCheck />
-              </span>
-              <span className="signup-mini-task-done">
-                Review your goals
-              </span>
-              <span className="signup-mini-task-status">Done</span>
-            </div>
-
-            <div className="signup-mini-task">
-              <span className="signup-mini-pending" />
-              <span>Finish today's tasks</span>
-              <span className="signup-mini-task-status">In progress</span>
-            </div>
-          </div>
-        </div>
-
-        <p className="signup-visual-footer">
-          A clearer mind starts with a clearer plan.
-        </p>
       </section>
 
       <section className="signup-form-panel">
@@ -152,19 +122,25 @@ const Signup = () => {
             </p>
           </div>
 
-          <form className="signup-form">
+          <form onSubmit={handleSubmit(onSubmit)} className="signup-form">
             <div className="signup-field">
               <label htmlFor="fullName">Full name</label>
               <div className="signup-input-wrapper">
                 <FiUser className="signup-input-icon" />
                 <input
                   id="fullName"
-                  name="fullName"
                   type="text"
                   placeholder="Enter your full name"
                   autoComplete="name"
+                  {...register("fullName")}
                 />
               </div>
+
+              {errors.fullName && (
+                <span className="signup-field-error" role="alert">
+                  {errors.fullName.message}
+                </span>
+              )}
             </div>
 
             <div className="signup-field">
@@ -173,12 +149,18 @@ const Signup = () => {
                 <FiMail className="signup-input-icon" />
                 <input
                   id="email"
-                  name="email"
                   type="email"
                   placeholder="you@example.com"
                   autoComplete="email"
+                  {...register("email")}
                 />
               </div>
+
+              {errors.email && (
+                <span className="signup-field-error" role="alert">
+                  {errors.email.message}
+                </span>
+              )}
             </div>
 
             <div className="signup-field">
@@ -187,10 +169,10 @@ const Signup = () => {
                 <FiLock className="signup-input-icon" />
                 <input
                   id="password"
-                  name="password"
                   type="password"
                   placeholder="Create a strong password"
                   autoComplete="new-password"
+                  { ...register("password") }
                 />
                 <button
                   className="signup-password-icon"
@@ -205,16 +187,22 @@ const Signup = () => {
               </span>
             </div>
 
+            {errors.password && (
+            <span className="signup-field-error" role="alert">
+              {errors.password.message}
+            </span>
+          )}
+
             <div className="signup-field">
               <label htmlFor="confirmPassword">Confirm password</label>
               <div className="signup-input-wrapper">
                 <FiLock className="signup-input-icon" />
                 <input
                   id="confirmPassword"
-                  name="confirmPassword"
                   type="password"
                   placeholder="Enter your password again"
                   autoComplete="new-password"
+                  { ...register('confirmPassword') }
                 />
                 <button
                   className="signup-password-icon"
@@ -226,37 +214,17 @@ const Signup = () => {
               </div>
             </div>
 
-            <label className="signup-terms">
-              <input type="checkbox" name="acceptTerms" />
-              <span className="signup-custom-checkbox">
-                <FiCheck />
-              </span>
-              <span>
-                I agree to the{" "}
-                <a href="/terms">Terms of Service</a> and{" "}
-                <a href="/privacy">Privacy Policy</a>.
-              </span>
-            </label>
+            {errors.confirmPassword && (
+          <span className="signup-field-error" role="alert">
+            {errors.confirmPassword.message}
+          </span>
+            )}
 
             <button className="signup-submit-button" type="submit">
               Create account
               <FiArrowRight />
             </button>
-
-            <div className="signup-divider">
-              <span>YOUR PRODUCTIVITY JOURNEY STARTS HERE</span>
-            </div>
-
-            <p className="signup-login-prompt">
-              Already have an account?{" "}
-              <a href="/login">Sign in</a>
-            </p>
           </form>
-
-          <p className="signup-security-note">
-            <FiLock />
-            Your information stays private and secure.
-          </p>
         </div>
       </section>
     </main>

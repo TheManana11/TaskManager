@@ -16,6 +16,18 @@
   box-sizing: border-box;
 }
 
+.signup-field-error {
+  display: block;
+  margin-top: 6px;
+  color: #dc2626;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.signup-input-wrapper input[aria-invalid="true"] {
+  border-color: #dc2626;
+}
+
 .signup-page {
   display: grid;
   grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
