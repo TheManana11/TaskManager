@@ -117,9 +117,9 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Dashboard />} />
+          <Route index element={<Dashboard tasks={tasks} setTasks={setTasks} />} />
 
-          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="dashboard" element={<Dashboard tasks={tasks} setTasks={setTasks} />} />
 
           <Route
             path="tasks"
