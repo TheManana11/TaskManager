@@ -9,5 +9,5 @@ export interface Task {
   description: string;
   dueDate: string;
   priority: TaskPriority;
-  completed: boolean;
+  status: 'Pending' | 'Completed';
 }

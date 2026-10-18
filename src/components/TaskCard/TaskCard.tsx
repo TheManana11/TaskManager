@@ -14,17 +14,17 @@ const TaskCard = ({ task, onToggle, onDelete }: TaskCardProps) => {
   return (
     <article
       className={`task-card ${
-        task.completed ? "task-card-completed" : ""
+        task.status === 'Completed' ? "task-card-completed" : ""
       }`}
     >
       <div className="task-card-header">
         <label className="task-checkbox">
           <input
             type="checkbox"
-            checked={task.completed}
+            checked={task.status === 'Completed'}
             onChange={() => onToggle(task.id)}
             aria-label={`Mark ${task.title} as ${
-              task.completed ? "pending" : "completed"
+              task.status === 'Completed' ? "pending" : "completed"
             }`}
           />
         </label>
@@ -51,8 +51,8 @@ const TaskCard = ({ task, onToggle, onDelete }: TaskCardProps) => {
 
         <p>
           <span className="detail-label">Status:</span>{" "}
-          <span className={task.completed ? "status-completed" : "status-pending"}>
-            {task.completed ? "Completed" : "Pending"}
+          <span className={task.status === 'Completed' ? "status-completed" : "status-pending"}>
+            {task.status === 'Completed' ? "Completed" : "Pending"}
           </span>
         </p>
       </div>

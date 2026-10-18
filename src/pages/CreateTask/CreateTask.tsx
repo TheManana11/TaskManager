@@ -1,6 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { type Task } from "../../types/task";
 import {
   FiArrowLeft,
   FiCalendar,
@@ -18,7 +19,11 @@ type TaskFromValues = {
   status: 'Pending' | 'Completed',
 }
 
-const CreateTask = () => {
+type CreateTaskProps = {
+  addTask: (task: Omit<Task, "id">) => void;
+};
+
+const CreateTask = ({ addTask }: CreateTaskProps) => {
   const {
     register,
     handleSubmit,
@@ -37,6 +42,10 @@ const CreateTask = () => {
 
  const onSubmitForm = (data: TaskFromValues) => {
   console.log("Your data is:", data);
+
+  addTask(data);
+
+
   reset();
 };
 

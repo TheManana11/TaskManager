@@ -15,14 +15,17 @@ const Tasks = ({ tasks, setTasks }: TasksProps) => {
   const [filter, setFilter] = useState<TaskFilter>("All");
 
   const handleToggleTask = (id: number) => {
-    setTasks((currentTasks) =>
-      currentTasks.map((task) =>
-        task.id === id
-          ? { ...task, completed: !task.completed }
-          : task
-      )
-    );
-  };
+  setTasks((currentTasks) =>
+    currentTasks.map((task) =>
+      task.id === id
+        ? {
+            ...task,
+            status: task.status === "Completed" ? "Pending" : "Completed",
+          }
+        : task
+    )
+  );
+};
 
   const handleDeleteTask = (id: number) => {
     setTasks((currentTasks) =>
@@ -32,22 +35,22 @@ const Tasks = ({ tasks, setTasks }: TasksProps) => {
 
   const filteredTasks = tasks.filter((task) => {
     if (filter === "Pending") {
-      return !task.completed;
+      return false;
     }
 
     if (filter === "Completed") {
-      return task.completed;
+      return true;
     }
 
     return true;
   });
 
   const pendingCount = tasks.filter(
-    (task) => !task.completed
+    (task) => task.status === 'Pending'
   ).length;
 
   const completedCount = tasks.filter(
-    (task) => task.completed
+    (task) => task.status === 'Completed'
   ).length;
 
   return (
