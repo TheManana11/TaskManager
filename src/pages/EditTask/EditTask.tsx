@@ -1,58 +1,82 @@
-import React from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
-import type { Task } from '../../types/task';
-import { FiArrowDownLeft, FiCalendar, FiCheckCircle, FiFileText, FiFlag } from 'react-icons/fi';
-import { useForm } from 'react-hook-form';
 
+import { useEffect } from "react";
+import { Link, useNavigate, useParams, Navigate } from "react-router-dom";
+import type { Task } from "../../types/task";
+import {
+  FiArrowDownLeft,
+  FiCalendar,
+  FiCheckCircle,
+  FiFileText,
+  FiFlag,
+} from "react-icons/fi";
+import { useForm } from "react-hook-form";
 
 type EditTaskProps = {
-  editTask: (task: Task) => void,
-  tasks: Task[]
+  editTask: (task: Task) => void;
+  tasks: Task[];
 };
 
-type TaskFromValues = {
-  title: string,
-  description: string,
-  dueDate: string,
-  priority: 'Low' | 'Medium' | 'High',
-  status: 'Pending' | 'Completed',
-}
+type TaskFormValues = {
+  title: string;
+  description: string;
+  dueDate: string;
+  priority: "Low" | "Medium" | "High";
+  status: "Pending" | "Completed";
+};
 
 const EditTask = ({ editTask, tasks }: EditTaskProps) => {
-const navigate = useNavigate();
-const { id } = useParams();
-const currentID = Number(id);
+  const navigate = useNavigate();
+  const { id } = useParams();
 
-const currentTask = tasks.filter((t) => t.id === currentID)[0];
-console.log(currentTask);
+  const currentID = Number(id);
 
+  const currentTask = tasks.find((task) => task.id === currentID);
 
-const {
+  const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<TaskFromValues>({
-    defaultValues:{
-      title: currentTask.title,
-      description: currentTask.description,
-      dueDate: currentTask.dueDate,
-      priority: currentTask.priority,
-      status: currentTask.status,
-    }
-  })
+  } = useForm<TaskFormValues>({
+    defaultValues: {
+      title: "",
+      description: "",
+      dueDate: "",
+      priority: "Medium",
+      status: "Pending",
+    },
+  });
 
-const onSubmitForm = (data: TaskFromValues) => {
-  const newData = {id: currentID, ...data}
-  editTask(newData);
-  reset();
-  navigate('/tasks')
-};
+  useEffect(() => {
+    if (currentTask) {
+      reset({
+        title: currentTask.title,
+        description: currentTask.description,
+        dueDate: currentTask.dueDate,
+        priority: currentTask.priority,
+        status: currentTask.status,
+      });
+    }
+  }, [currentTask, reset]);
+
+  if (!id || !Number.isInteger(currentID) || !currentTask) {
+    return <Navigate to="/dashboard/tasks" replace />;
+  }
+
+  const onSubmitForm = (data: TaskFormValues): void => {
+    const updatedTask: Task = {
+      id: currentID,
+      ...data,
+    };
+
+    editTask(updatedTask);
+    navigate("/dashboard/tasks");
+  };
 
   return (
     <main className="create-task-page">
       <div className="create-task-breadcrumb">
-        <Link to="/tasks" className="back-link">
+        <Link to="/dashboard/tasks" className="back-link">
           <FiArrowDownLeft aria-hidden="true" />
           <span>Back to tasks</span>
         </Link>
@@ -65,7 +89,7 @@ const onSubmitForm = (data: TaskFromValues) => {
           </div>
 
           <div>
-            <h1>Edit The Existing Task</h1>
+            <h1>Edit Existing Task</h1>
           </div>
         </div>
       </header>
@@ -79,13 +103,16 @@ const onSubmitForm = (data: TaskFromValues) => {
 
             <div>
               <h2>Task Information</h2>
-              <p>Enter the details of your new task below.</p>
+              <p>Update the details of your task below.</p>
             </div>
           </div>
 
           <div className="form-divider" />
 
-          <form onSubmit={handleSubmit(onSubmitForm)} className="create-task-form">
+          <form
+            onSubmit={handleSubmit(onSubmitForm)}
+            className="create-task-form"
+          >
             <div className="form-field">
               <label htmlFor="title">
                 Task Title <span className="required-mark">*</span>
@@ -95,25 +122,24 @@ const onSubmitForm = (data: TaskFromValues) => {
                 id="title"
                 type="text"
                 placeholder="e.g. Complete project proposal"
-                { ...register('title' ,{
-                  required: 'The title is required',
+                {...register("title", {
+                  required: "The title is required",
                   minLength: {
                     value: 3,
-                    message: 'The minimum value for the title is 3'
+                    message: "The minimum length for the title is 3",
                   },
                   maxLength: {
                     value: 100,
-                    message: 'The maximum value for the title is 100'
-                  }
+                    message: "The maximum length for the title is 100",
+                  },
                 })}
               />
-              {
-                errors.title && (
-                  <span className="field-error">
-                    {errors.title.message}
-                  </span>
-                )
-              }
+
+              {errors.title && (
+                <span className="field-error">
+                  {errors.title.message}
+                </span>
+              )}
 
               <span className="field-hint">
                 Give your task a clear and descriptive title.
@@ -127,23 +153,24 @@ const onSubmitForm = (data: TaskFromValues) => {
                 id="description"
                 rows={5}
                 placeholder="Describe the task, its objectives, or any additional details..."
-                { ...register('description' ,{
-                  required: 'The description is required',
+                {...register("description", {
+                  required: "The description is required",
                   minLength: {
                     value: 10,
-                    message: 'The minimum value for the description is 10'
+                    message: "The minimum length for the description is 10",
                   },
                   maxLength: {
                     value: 500,
-                    message: 'The maximum value for the description is 500'
-                  }
+                    message: "The maximum length for the description is 500",
+                  },
                 })}
               />
-                {errors.description && (
-                  <span className="field-error">
+
+              {errors.description && (
+                <span className="field-error">
                   {errors.description.message}
-                    </span>
-                  )}
+                </span>
+              )}
 
               <span className="field-hint">
                 Add any details that will help you complete this task.
@@ -160,10 +187,11 @@ const onSubmitForm = (data: TaskFromValues) => {
                 <input
                   id="dueDate"
                   type="date"
-                  { ...register("dueDate" ,{
-                  required: 'The date is required',
-                })}
+                  {...register("dueDate", {
+                    required: "The date is required",
+                  })}
                 />
+
                 {errors.dueDate && (
                   <span className="field-error">
                     {errors.dueDate.message}
@@ -183,9 +211,9 @@ const onSubmitForm = (data: TaskFromValues) => {
 
                 <select
                   id="priority"
-                  { ...register("priority" ,{
-                  required: 'The priority is required'
-                })}
+                  {...register("priority", {
+                    required: "The priority is required",
+                  })}
                 >
                   <option value="Low">Low Priority</option>
                   <option value="Medium">Medium Priority</option>
@@ -211,8 +239,8 @@ const onSubmitForm = (data: TaskFromValues) => {
 
               <select
                 id="status"
-                { ...register("status" ,{
-                  required: 'The status is required'
+                {...register("status", {
+                  required: "The status is required",
                 })}
               >
                 <option value="Pending">Pending</option>
@@ -233,7 +261,10 @@ const onSubmitForm = (data: TaskFromValues) => {
             <div className="form-divider form-actions-divider" />
 
             <div className="create-task-actions">
-              <Link to="/tasks" className="cancel-task-button">
+              <Link
+                to="/dashboard/tasks"
+                className="cancel-task-button"
+              >
                 Cancel
               </Link>
 

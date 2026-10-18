@@ -1,5 +1,6 @@
 
 import { useNavigate } from "react-router-dom";
+import { useMemo, type Dispatch, type SetStateAction } from "react";
 import {
   FiCalendar,
   FiCheckCircle,
@@ -14,18 +15,21 @@ import "./styles.css";
 
 type DashboardProps = {
   tasks: Task[];
-  setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+  setTasks: Dispatch<SetStateAction<Task[]>>;
 };
 
 const Dashboard = ({ tasks, setTasks }: DashboardProps) => {
   const navigate = useNavigate();
 
-  const today = new Date();
-  const todayString = [
-    today.getFullYear(),
-    String(today.getMonth() + 1).padStart(2, "0"),
-    String(today.getDate()).padStart(2, "0"),
-  ].join("-");
+  const todayString = useMemo(() => {
+    const today = new Date();
+
+    return [
+      today.getFullYear(),
+      String(today.getMonth() + 1).padStart(2, "0"),
+      String(today.getDate()).padStart(2, "0"),
+    ].join("-");
+  }, []);
 
   const todaysTasks = tasks.filter(
     (task) => task.dueDate === todayString
@@ -39,7 +43,7 @@ const Dashboard = ({ tasks, setTasks }: DashboardProps) => {
     (task) => task.status === "Pending"
   ).length;
 
-  const handleToggleTask = (id: number) => {
+  const handleToggleTask = (id: number): void => {
     setTasks((currentTasks) =>
       currentTasks.map((task) =>
         task.id === id
@@ -53,7 +57,7 @@ const Dashboard = ({ tasks, setTasks }: DashboardProps) => {
     );
   };
 
-  const handleDeleteTask = (id: number) => {
+  const handleDeleteTask = (id: number): void => {
     setTasks((currentTasks) =>
       currentTasks.filter((task) => task.id !== id)
     );
@@ -68,18 +72,19 @@ const Dashboard = ({ tasks, setTasks }: DashboardProps) => {
         </div>
 
         <button
+          type="button"
           className="dashboard-new-task-button"
-          onClick={() => navigate("/create-task")}
+          onClick={() => navigate("/dashboard/create-task")}
         >
-          <FiPlus />
+          <FiPlus aria-hidden="true" />
           <span>New Task</span>
         </button>
       </header>
 
-      <section className="dashboard-stats">
+      <section className="dashboard-stats" aria-label="Task statistics">
         <article className="dashboard-stat-card total-stat">
           <div className="dashboard-stat-icon">
-            <FiCalendar />
+            <FiCalendar aria-hidden="true" />
           </div>
 
           <div className="dashboard-stat-info">
@@ -90,7 +95,7 @@ const Dashboard = ({ tasks, setTasks }: DashboardProps) => {
 
         <article className="dashboard-stat-card completed-stat">
           <div className="dashboard-stat-icon">
-            <FiCheckCircle />
+            <FiCheckCircle aria-hidden="true" />
           </div>
 
           <div className="dashboard-stat-info">
@@ -101,7 +106,7 @@ const Dashboard = ({ tasks, setTasks }: DashboardProps) => {
 
         <article className="dashboard-stat-card pending-stat">
           <div className="dashboard-stat-icon">
-            <FiClock />
+            <FiClock aria-hidden="true" />
           </div>
 
           <div className="dashboard-stat-info">
@@ -116,11 +121,12 @@ const Dashboard = ({ tasks, setTasks }: DashboardProps) => {
           <h2>Today's Tasks</h2>
 
           <button
+            type="button"
             className="dashboard-view-all-button"
-            onClick={() => navigate("/tasks")}
+            onClick={() => navigate("/dashboard/tasks")}
           >
             View all
-            <FiArrowRight />
+            <FiArrowRight aria-hidden="true" />
           </button>
         </div>
 
@@ -138,7 +144,7 @@ const Dashboard = ({ tasks, setTasks }: DashboardProps) => {
           ) : (
             <div className="dashboard-empty-state">
               <div className="dashboard-empty-icon">
-                <FiCalendar />
+                <FiCalendar aria-hidden="true" />
               </div>
 
               <h3>No tasks due today</h3>
@@ -148,10 +154,11 @@ const Dashboard = ({ tasks, setTasks }: DashboardProps) => {
               </p>
 
               <button
+                type="button"
                 className="dashboard-empty-button"
-                onClick={() => navigate("/create-task")}
+                onClick={() => navigate("/dashboard/create-task")}
               >
-                <FiPlus />
+                <FiPlus aria-hidden="true" />
                 Create a task
               </button>
             </div>

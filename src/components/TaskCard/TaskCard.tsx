@@ -59,7 +59,7 @@ const TaskCard = ({ task, onToggle, onDelete }: TaskCardProps) => {
 
       <div className="task-card-actions">
         <Link
-          to={`/edit-task/${task.id}`}
+          to={`/dashboard/edit-task/${task.id}`}
           className="task-action-button edit-button"
         >
           <FiEdit2 aria-hidden="true" />

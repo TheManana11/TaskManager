@@ -1,7 +1,7 @@
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { type Task } from "../../types/task";
+import type { Task } from "../../types/task";
 import {
   FiArrowLeft,
   FiCalendar,
@@ -11,48 +11,46 @@ import {
 } from "react-icons/fi";
 import "./styles.css";
 
-type TaskFromValues = {
-  title: string,
-  description: string,
-  dueDate: string,
-  priority: 'Low' | 'Medium' | 'High',
-  status: 'Pending' | 'Completed',
-}
+type TaskFormValues = {
+  title: string;
+  description: string;
+  dueDate: string;
+  priority: "Low" | "Medium" | "High";
+  status: "Pending" | "Completed";
+};
 
 type CreateTaskProps = {
   addTask: (task: Omit<Task, "id">) => void;
 };
 
 const CreateTask = ({ addTask }: CreateTaskProps) => {
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<TaskFromValues>({
-    defaultValues:{
-      title: '',
-      description: '',
-      dueDate: '',
-      priority: 'Medium',
-      status: 'Pending',
-    }
-  })
+  } = useForm<TaskFormValues>({
+    defaultValues: {
+      title: "",
+      description: "",
+      dueDate: "",
+      priority: "Medium",
+      status: "Pending",
+    },
+  });
 
-
- const onSubmitForm = (data: TaskFromValues) => {
-  console.log("Your data is:", data);
-
-  addTask(data);
-
-
-  reset();
-};
+  const onSubmitForm = (data: TaskFormValues): void => {
+    addTask(data);
+    reset();
+    navigate("/dashboard/tasks");
+  };
 
   return (
     <main className="create-task-page">
       <div className="create-task-breadcrumb">
-        <Link to="/tasks" className="back-link">
+        <Link to="/dashboard/tasks" className="back-link">
           <FiArrowLeft aria-hidden="true" />
           <span>Back to tasks</span>
         </Link>
@@ -88,7 +86,10 @@ const CreateTask = ({ addTask }: CreateTaskProps) => {
 
           <div className="form-divider" />
 
-          <form onSubmit={handleSubmit(onSubmitForm)} className="create-task-form">
+          <form
+            onSubmit={handleSubmit(onSubmitForm)}
+            className="create-task-form"
+          >
             <div className="form-field">
               <label htmlFor="title">
                 Task Title <span className="required-mark">*</span>
@@ -98,25 +99,24 @@ const CreateTask = ({ addTask }: CreateTaskProps) => {
                 id="title"
                 type="text"
                 placeholder="e.g. Complete project proposal"
-                { ...register('title' ,{
-                  required: 'The title is required',
+                {...register("title", {
+                  required: "The title is required",
                   minLength: {
                     value: 3,
-                    message: 'The minimum value for the title is 3'
+                    message: "The minimum length for the title is 3",
                   },
                   maxLength: {
                     value: 100,
-                    message: 'The maximum value for the title is 100'
-                  }
+                    message: "The maximum length for the title is 100",
+                  },
                 })}
               />
-              {
-                errors.title && (
-                  <span className="field-error">
-                    {errors.title.message}
-                  </span>
-                )
-              }
+
+              {errors.title && (
+                <span className="field-error">
+                  {errors.title.message}
+                </span>
+              )}
 
               <span className="field-hint">
                 Give your task a clear and descriptive title.
@@ -130,23 +130,24 @@ const CreateTask = ({ addTask }: CreateTaskProps) => {
                 id="description"
                 rows={5}
                 placeholder="Describe the task, its objectives, or any additional details..."
-                { ...register('description' ,{
-                  required: 'The description is required',
+                {...register("description", {
+                  required: "The description is required",
                   minLength: {
                     value: 10,
-                    message: 'The minimum value for the description is 10'
+                    message: "The minimum length for the description is 10",
                   },
                   maxLength: {
                     value: 500,
-                    message: 'The maximum value for the description is 500'
-                  }
+                    message: "The maximum length for the description is 500",
+                  },
                 })}
               />
-                {errors.description && (
-                  <span className="field-error">
+
+              {errors.description && (
+                <span className="field-error">
                   {errors.description.message}
-                    </span>
-                  )}
+                </span>
+              )}
 
               <span className="field-hint">
                 Add any details that will help you complete this task.
@@ -163,10 +164,11 @@ const CreateTask = ({ addTask }: CreateTaskProps) => {
                 <input
                   id="dueDate"
                   type="date"
-                  { ...register("dueDate" ,{
-                  required: 'The date is required',
-                })}
+                  {...register("dueDate", {
+                    required: "The date is required",
+                  })}
                 />
+
                 {errors.dueDate && (
                   <span className="field-error">
                     {errors.dueDate.message}
@@ -186,9 +188,9 @@ const CreateTask = ({ addTask }: CreateTaskProps) => {
 
                 <select
                   id="priority"
-                  { ...register("priority" ,{
-                  required: 'The priority is required'
-                })}
+                  {...register("priority", {
+                    required: "The priority is required",
+                  })}
                 >
                   <option value="Low">Low Priority</option>
                   <option value="Medium">Medium Priority</option>
@@ -214,8 +216,8 @@ const CreateTask = ({ addTask }: CreateTaskProps) => {
 
               <select
                 id="status"
-                { ...register("status" ,{
-                  required: 'The status is required'
+                {...register("status", {
+                  required: "The status is required",
                 })}
               >
                 <option value="Pending">Pending</option>
@@ -236,7 +238,10 @@ const CreateTask = ({ addTask }: CreateTaskProps) => {
             <div className="form-divider form-actions-divider" />
 
             <div className="create-task-actions">
-              <Link to="/tasks" className="cancel-task-button">
+              <Link
+                to="/dashboard/tasks"
+                className="cancel-task-button"
+              >
                 Cancel
               </Link>
 

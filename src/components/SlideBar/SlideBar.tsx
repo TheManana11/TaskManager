@@ -29,7 +29,7 @@ const SlideBar = () => {
             </li>
 
             <li>
-              <NavLink to="/tasks" className={({ isActive }) =>
+              <NavLink to="/dashboard/tasks" className={({ isActive }) =>
                 isActive ? "nav-link active" : "nav-link"
               }>
                 <LiaTasksSolid />
@@ -38,7 +38,7 @@ const SlideBar = () => {
             </li>
 
             <li>
-              <NavLink to="/create-task" className={({ isActive }) =>
+              <NavLink to="/dashboard/create-task" className={({ isActive }) =>
                 isActive ? "nav-link active" : "nav-link"
               }>
                 <IoIosAddCircleOutline />

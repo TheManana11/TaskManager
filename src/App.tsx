@@ -1,5 +1,4 @@
-
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import Layout from "./pages/Layout/Layout";
@@ -7,6 +6,7 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import Tasks from "./pages/Tasks/Tasks";
 import CreateTask from "./pages/CreateTask/CreateTask";
 import EditTask from "./pages/EditTask/EditTask";
+import Signup from './pages/Signup/SignUp';
 
 import type { Task } from "./types/task";
 
@@ -79,31 +79,30 @@ const initialTasks: Task[] = [
 
 const App = () => {
   const [tasks, setTasks] = useState<Task[]>(() => {
-    const savedTasks: string | null = localStorage.getItem("Tasks");
+    const savedTasks = localStorage.getItem("Tasks");
 
-    return savedTasks ? JSON.parse(savedTasks) as Task[] : initialTasks;
+    return savedTasks
+      ? (JSON.parse(savedTasks) as Task[])
+      : initialTasks;
   });
 
   useEffect(() => {
     localStorage.setItem("Tasks", JSON.stringify(tasks));
   }, [tasks]);
 
-  const addTask = (task: Omit<Task, "id">) => {
-    let id: number;
-
-    do {
-      id = Date.now();
-    } while (tasks.some((existingTask) => existingTask.id === id));
+  const addTask = (task: Omit<Task, "id">): void => {
+    const newId =
+      Math.max(0, ...tasks.map((existingTask) => existingTask.id)) + 1;
 
     const newTask: Task = {
       ...task,
-      id,
+      id: newId,
     };
 
     setTasks((currentTasks) => [...currentTasks, newTask]);
   };
 
-  const editTask = (task: Task) => {
+  const editTask = (task: Task): void => {
     setTasks((currentTasks) =>
       currentTasks.map((currentTask) =>
         currentTask.id === task.id
@@ -116,16 +115,17 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Dashboard tasks={tasks} setTasks={setTasks} />} />
+        <Route path="/" element={<Signup />} />
 
-          <Route path="dashboard" element={<Dashboard tasks={tasks} setTasks={setTasks} />} />
+        <Route path="/dashboard" element={<Layout />}>
+          <Route
+            index
+            element={<Dashboard tasks={tasks} setTasks={setTasks} />}
+          />
 
           <Route
             path="tasks"
-            element={
-              <Tasks tasks={tasks} setTasks={setTasks} />
-            }
+            element={<Tasks tasks={tasks} setTasks={setTasks} />}
           />
 
           <Route
@@ -135,11 +135,11 @@ const App = () => {
 
           <Route
             path="edit-task/:id"
-            element={
-              <EditTask tasks={tasks} editTask={editTask} />
-            }
+            element={<EditTask tasks={tasks} editTask={editTask} />}
           />
         </Route>
+
+        {/* <Route path="*" element={<Navigate to="/dashboard" replace />} /> */}
       </Routes>
     </BrowserRouter>
   );

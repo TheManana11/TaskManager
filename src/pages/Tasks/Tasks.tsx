@@ -2,6 +2,7 @@
 import { useState, type Dispatch, type SetStateAction } from "react";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { NavLink } from "react-router-dom";
+
 import TaskCard from "../../components/TaskCard/TaskCard";
 import type { Task, TaskFilter } from "../../types/task";
 import "./styles.css";
@@ -14,20 +15,21 @@ type TasksProps = {
 const Tasks = ({ tasks, setTasks }: TasksProps) => {
   const [filter, setFilter] = useState<TaskFilter>("All");
 
-  const handleToggleTask = (id: number) => {
-  setTasks((currentTasks) =>
-    currentTasks.map((task) =>
-      task.id === id
-        ? {
-            ...task,
-            status: task.status === "Completed" ? "Pending" : "Completed",
-          }
-        : task
-    )
-  );
-};
+  const handleToggleTask = (id: number): void => {
+    setTasks((currentTasks) =>
+      currentTasks.map((task) =>
+        task.id === id
+          ? {
+              ...task,
+              status:
+                task.status === "Completed" ? "Pending" : "Completed",
+            }
+          : task
+      )
+    );
+  };
 
-  const handleDeleteTask = (id: number) => {
+  const handleDeleteTask = (id: number): void => {
     setTasks((currentTasks) =>
       currentTasks.filter((task) => task.id !== id)
     );
@@ -35,22 +37,22 @@ const Tasks = ({ tasks, setTasks }: TasksProps) => {
 
   const filteredTasks = tasks.filter((task) => {
     if (filter === "Pending") {
-      return false;
+      return task.status === "Pending";
     }
 
     if (filter === "Completed") {
-      return true;
+      return task.status === "Completed";
     }
 
     return true;
   });
 
   const pendingCount = tasks.filter(
-    (task) => task.status === 'Pending'
+    (task) => task.status === "Pending"
   ).length;
 
   const completedCount = tasks.filter(
-    (task) => task.status === 'Completed'
+    (task) => task.status === "Completed"
   ).length;
 
   return (
@@ -58,7 +60,10 @@ const Tasks = ({ tasks, setTasks }: TasksProps) => {
       <header className="tasks-header">
         <h1>All Tasks</h1>
 
-        <NavLink to="/create-task" className="new-task-button">
+        <NavLink
+          to="/dashboard/create-task"
+          className="new-task-button"
+        >
           <IoIosAddCircleOutline aria-hidden="true" />
           <span>New Task</span>
         </NavLink>
