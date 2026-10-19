@@ -72,33 +72,6 @@ npm run preview
 
 Available commands are defined in `package.json`.
 
-## Data storage
-
-Tasks are stored in the browser's `localStorage`, using the key `Tasks` in the implementation discussed during development. Check the source code for the exact key. This means:
-
-- Tasks remain after a refresh in the same browser profile.
-- Data is not shared across devices or users.
-- Clearing browser storage may delete saved tasks.
-- This is not a substitute for a server database.
-
-## Project structure
-
-The following is a guide; update it to match the actual repository:
-
-```text
-src/
-├── components/
-├── pages/
-│   ├── Dashboard/
-│   ├── Tasks/
-│   └── CreateTask/
-├── types/
-│   └── task.ts
-├── App.tsx
-├── main.tsx
-└── index.css
-```
-
 ## Future improvements
 
 - Refactor shared task state using React Context and `useReducer`.
@@ -125,4 +98,4 @@ These are planned improvements; they should not be considered implemented until 
 
 ## Notes
 
-This project is currently described as a frontend-only learning project. Review `package.json`, the actual source tree, and current behaviour before publishing this README as a definitive technical specification.
+This project is currently described as a frontend-only learning project. 
