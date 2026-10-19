@@ -1,0 +1,248 @@
+Task Manager — Project Documentation
+
+1. Project overview
+
+Project name: Task Manager
+Application type: Frontend-only web application
+Frontend: React + TypeScript
+Build tool: Vite
+Data storage: Browser localStorage
+Backend/API: None currently
+
+Task Manager is a task-management application built to practice modern
+React and TypeScript through a multi-page project. Users can view task
+statistics, browse and filter tasks, create tasks, and manage their
+completion status. The application stores task data in the browser, so
+tasks remain available after refreshing the page in the same browser
+profile.
+
+This document describes the intended/current project based on the
+implementation discussed during development. Confirm the exact file tree
+and installed package versions against the repository before treating
+them as exhaustive.
+
+2. Goals
+
+-   Practise building a multi-page React application with TypeScript.
+-   Use reusable components and clearly separated pages.
+-   Handle navigation with React Router.
+-   Validate forms with React Hook Form and Zod.
+-   Manage task data with typed state and immutable updates.
+-   Persist task data in localStorage.
+-   Establish a foundation for learning Context, reducers, custom hooks,
+    TanStack Query, and a modern styling system.
+
+3. Main features
+
+Dashboard
+
+-   Displays a summary of task progress, such as total, completed, and
+    pending tasks.
+-   Provides a central overview of task activity.
+-   Uses a shared task collection so dashboard statistics reflect the
+    current task data.
+
+Tasks page
+
+-   Displays the task collection.
+-   Supports viewing or filtering tasks by status, such as pending and
+    completed.
+-   Provides task actions such as completing or deleting a task,
+    depending on the current implementation.
+
+Create task
+
+-   Provides a form for entering task information.
+-   The task model discussed during development includes id, title,
+    description, dueDate, priority, and completed.
+-   New tasks should be added immutably to the shared task collection.
+
+Sign-up flow
+
+A sign-up screen was part of the project plan and was used to practise
+React Hook Form and Zod validation. The project is frontend-only: unless
+a backend or authentication provider has since been added, the form does
+not create a real account or provide secure authentication.
+
+4. Architecture
+
+The application follows a client-side, component-based architecture.
+
+-   Application entry point: Starts the React application.
+-   App and routing: Defines the application routes and which page is
+    rendered for each URL.
+-   Pages: Compose the main screens, such as Dashboard, Tasks, and
+    Create Task.
+-   Reusable components: Hold UI elements shared by multiple pages, such
+    as navigation, headers, task cards, and form elements.
+-   Task type: Defines the TypeScript shape of a task.
+-   State management: The implementation has used React state and
+    immutable array updates. A single Task[] collection is intended to
+    act as the source of truth.
+-   Persistence: Task data is stored in localStorage, using the key
+    Tasks in the implementation discussed. Check the source code for the
+    exact key.
+-   Form validation: React Hook Form manages form state and submission;
+    Zod defines validation rules, connected through @hookform/resolvers.
+
+Typical task data flow
+
+1.  A user submits a task form or chooses a task action.
+2.  The relevant handler creates an updated task object or array without
+    mutating the existing state.
+3.  React updates the UI from the new state.
+4.  The persistence logic saves the task collection to localStorage.
+5.  On a later load, the application reads the saved data and restores
+    the task collection.
+
+localStorage is browser-local storage, not a shared database. Data is
+not synchronised between devices or users, and clearing browser storage
+can remove it.
+
+5. Libraries and tools
+
+The following tools/libraries were used or planned during development.
+Check package.json for the definitive installed list and exact versions.
+
+  Tool/library           Purpose
+  ---------------------- ---------------------------------------------------------
+  React                  Builds the user interface from components.
+  TypeScript             Adds static types to JavaScript and React code.
+  Vite                   Runs the development server and builds the frontend.
+  React Router DOM       Handles client-side page navigation.
+  React Hook Form        Manages form values, submission, and field errors.
+  Zod                    Defines schemas and validates form data.
+  @hookform/resolvers    Connects Zod validation to React Hook Form.
+  CSS                    Styles the application in the current styling approach.
+  Browser localStorage   Persists task data locally in the browser.
+  React built-in hooks   Manage component state and side effects.
+
+
+6. Requirements
+
+-   Node.js compatible with the installed Vite version.
+-   npm (usually installed with Node.js).
+-   Git, if cloning the repository.
+-   A modern browser.
+
+7. Download, install, and run
+
+Option A: Download the project files
+
+1.  Download or obtain the project folder from its repository or file
+    share.
+2.  Extract the folder if it is a ZIP archive.
+3.  Open the project folder in VS Code or a terminal.
+4.  Make sure package.json is in the current directory.
+
+Option B: Clone from Git
+
+If the project has been pushed to a Git repository:
+
+    git clone <repository-url>
+    cd <project-folder>
+
+Replace the placeholders with the actual repository URL and folder name.
+If no remote repository exists, download or copy the project folder
+instead.
+
+Install dependencies
+
+Run this from the directory containing package.json:
+
+    npm install
+
+Start the development server
+
+    npm run dev
+
+Vite will print a local URL in the terminal, commonly
+http://localhost:5173/. Open the exact URL shown in the terminal.
+
+
+8. Project structure
+
+The precise structure can differ from the outline below. Treat this as a
+conceptual guide and update it to match the actual repository.
+
+    task-manager/
+    ├── public/
+    ├── src/
+    │   ├── components/
+    │   │   ├── Sidebar/
+    │   │   ├── TaskCard/
+    │   │   └── ...
+    │   ├── pages/
+    │   │   ├── Dashboard/
+    │   │   ├── Tasks/
+    │   │   └── CreateTask/
+    │   │   └── EditTask/
+    │   │   └── Layout/
+    │   │   └── Signup/
+    │   ├── types/
+    │   │   └── task.ts
+    │   ├── App.tsx
+    │   ├── main.tsx
+    │   └── index.css
+    ├── index.html
+    ├── package.json
+    ├── package-lock.json
+    ├── tsconfig*.json
+    └── vite.config.ts
+
+
+9. Future roadmap
+
+The following are planned improvements, not claims about what the
+current version already contains.
+
+Phase 1 — Refactor task state with Context and useReducer
+
+-   Create a task context to provide shared task state and actions to
+    components that need them.
+-   Use useReducer to centralise actions such as adding, updating,
+    deleting, and toggling a task.
+-   Define typed action payloads and a reducer with predictable state
+    transitions.
+-   Avoid duplicating task state across pages.
+-   Keep the reducer focused on state transitions; keep persistence
+    concerns separate.
+
+Phase 2 — Extract custom hooks
+
+-   Create a reusable useLocalStorage hook for reading and persisting
+    browser data.
+-   Extract repeated form or UI logic only when doing so improves reuse
+    and clarity.
+-   Keep custom hooks focused; do not extract every small function
+    automatically.
+
+Phase 3 — Introduce TanStack Query when there is a server/API
+
+-   Learn queries for fetching and caching server data.
+-   Learn mutations for creating, updating, and deleting tasks.
+-   Handle loading, error, stale data, and refetching states.
+
+Phase 4 — Modernise styling with Tailwind CSS and shadcn/ui
+
+-   Configure Tailwind CSS using the installation instructions
+    appropriate for the selected versions.
+-   Add shadcn/ui components selectively, such as buttons, dialogs,
+    dropdowns, forms, and tables.
+-   Replace existing CSS gradually and keep the design consistent.
+
+10. Official references
+
+-   React documentation: https://react.dev/
+-   React TypeScript guide: https://react.dev/learn/typescript
+-   React Router documentation: https://reactrouter.com/
+-   Vite guide: https://vite.dev/guide/
+-   TypeScript documentation: https://www.typescriptlang.org/docs/
+-   React Hook Form: https://react-hook-form.com/
+-   Zod: https://zod.dev/
+-   Hookform resolvers: https://github.com/react-hook-form/resolvers
+-   MDN localStorage:
+    https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage
+-   TanStack Query: https://tanstack.com/query/latest
+-   Tailwind CSS: https://tailwindcss.com/docs
+-   shadcn/ui: https://ui.shadcn.com/docs

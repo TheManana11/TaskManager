@@ -1,75 +1,128 @@
-# React + TypeScript + Vite
+# Task Manager
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A frontend-only task management app built with **React, TypeScript, and Vite**. It provides a dashboard for task progress and pages for viewing and managing tasks. Task data is persisted in the browser with `localStorage`.
 
-Currently, two official plugins are available:
+> **Project status:** Learning project. Check the current repository for the exact feature set and installed dependencies. The sign-up screen is a UI/validation exercise and does not provide real authentication unless a backend or authentication provider has been added.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- Dashboard with task statistics.
+- View and filter tasks by status.
+- Create tasks with details such as title, description, due date, and priority.
+- Mark tasks as completed and delete tasks, where implemented.
+- Form validation using React Hook Form and Zod.
+- Browser-local persistence using `localStorage`.
+- Client-side navigation with React Router.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech stack
 
-## Expanding the ESLint configuration
+- React
+- TypeScript
+- Vite
+- React Router DOM
+- React Hook Form
+- Zod
+- `@hookform/resolvers`
+- CSS
+- Browser `localStorage`
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+See `PROJECT_DOCUMENTATION.txt` for the architecture, limitations, setup instructions, and future roadmap. Verify the definitive package list in `package.json`.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Getting started
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Requirements
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Node.js compatible with the version of Vite used by this project.
+- npm.
+- A modern web browser.
 
+### 1. Get the code
+
+Clone the repository if it is hosted on Git:
+
+```bash
+git clone <repository-url>
+cd <project-folder>
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+Replace the placeholders with your repository URL and project directory. Alternatively, download and extract the project folder.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 2. Install dependencies
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Run in the directory containing `package.json`:
 
+```bash
+npm install
 ```
+
+### 3. Run locally
+
+```bash
+npm run dev
+```
+
+Open the local URL printed by Vite in the terminal (commonly `http://localhost:5173/`).
+
+### 4. Build and preview
+
+```bash
+npm run build
+npm run preview
+```
+
+Available commands are defined in `package.json`.
+
+## Data storage
+
+Tasks are stored in the browser's `localStorage`, using the key `Tasks` in the implementation discussed during development. Check the source code for the exact key. This means:
+
+- Tasks remain after a refresh in the same browser profile.
+- Data is not shared across devices or users.
+- Clearing browser storage may delete saved tasks.
+- This is not a substitute for a server database.
+
+## Project structure
+
+The following is a guide; update it to match the actual repository:
+
+```text
+src/
+├── components/
+├── pages/
+│   ├── Dashboard/
+│   ├── Tasks/
+│   └── CreateTask/
+├── types/
+│   └── task.ts
+├── App.tsx
+├── main.tsx
+└── index.css
+```
+
+## Future improvements
+
+- Refactor shared task state using React Context and `useReducer`.
+- Extract reusable logic into custom hooks, including a `useLocalStorage` hook where appropriate.
+- Add tests for reducers, validation, and core task flows.
+- Migrate to Tailwind CSS and introduce shadcn/ui components gradually.
+- Add TanStack Query when the application uses a backend/API and needs server-state caching and mutations.
+- Add a backend and secure authentication if real user accounts and cross-device synchronisation are required.
+
+These are planned improvements; they should not be considered implemented until they are added to the codebase.
+
+## Documentation
+
+- Full project notes: [`PROJECT_DOCUMENTATION.txt`](./PROJECT_DOCUMENTATION.txt)
+- React: https://react.dev/
+- TypeScript: https://www.typescriptlang.org/docs/
+- Vite: https://vite.dev/guide/
+- React Router: https://reactrouter.com/
+- React Hook Form: https://react-hook-form.com/
+- Zod: https://zod.dev/
+- TanStack Query: https://tanstack.com/query/latest
+- Tailwind CSS: https://tailwindcss.com/docs
+- shadcn/ui: https://ui.shadcn.com/docs
+
+## Notes
+
+This project is currently described as a frontend-only learning project. Review `package.json`, the actual source tree, and current behaviour before publishing this README as a definitive technical specification.
