@@ -1,24 +1,15 @@
 
-import { type Dispatch, type SetStateAction } from "react";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { NavLink } from "react-router-dom";
-
 import TaskCard from "../../components/TaskCard/TaskCard";
-import type { Task } from "../../types/task";
 import "./styles.css";
-
 import useDashboard from '../Dashboard/useDashboard'
 import useTasks from "./useTasks";
 
-type TasksProps = {
-  tasks: Task[];
-  setTasks: Dispatch<SetStateAction<Task[]>>;
-};
+const Tasks = () => {
 
-const Tasks = ({ tasks, setTasks }: TasksProps) => {
-
-  const { handleToggleTask, handleDeleteTask, pendingTasks: pendingCount, completedTasks: completedCount } = useDashboard({tasks, setTasks});
-  const { filter, setFilter, filteredTasks } = useTasks({ tasks, setTasks });
+  const { handleToggleTask, handleDeleteTask, pendingTasks: pendingCount, completedTasks: completedCount } = useDashboard();
+  const { filter, setFilter, filteredTasks, tasks } = useTasks();
 
   return (
     <div className="tasks-container">

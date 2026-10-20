@@ -1,4 +1,3 @@
-// import React from 'react'
 import { Outlet } from 'react-router-dom'
 import SlideBar from '../../components/SlideBar/SlideBar'
 import './styles.css'

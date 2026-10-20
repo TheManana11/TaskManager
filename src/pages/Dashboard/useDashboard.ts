@@ -1,13 +1,11 @@
 import { useMemo, type Dispatch, type SetStateAction } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Task } from "../../types/task";
+import useTasksContext from "../../context/useTasksContext";
 
-type DashboardProps = {
-  tasks: Task[];
-  setTasks: Dispatch<SetStateAction<Task[]>>;
-};
 
-const useDashboard = ({ tasks, setTasks }: DashboardProps) => {
+const useDashboard = () => {
+    const { tasks, setTasks } = useTasksContext();
     const navigate = useNavigate();
     
       const todayString = useMemo(() => {
@@ -59,7 +57,8 @@ const useDashboard = ({ tasks, setTasks }: DashboardProps) => {
         completedTasks,
         pendingTasks,
         handleToggleTask,
-        handleDeleteTask   
+        handleDeleteTask,
+        tasks   
       }
 }
 

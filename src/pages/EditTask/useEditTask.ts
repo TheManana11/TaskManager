@@ -2,10 +2,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import type { Task } from "../../types/task";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
+import useTasksContext from "../../context/useTasksContext";
 
 type EditTaskProps = {
   editTask: (task: Task) => void;
-  tasks: Task[];
 };
 
 type TaskFormValues = {
@@ -16,8 +16,9 @@ type TaskFormValues = {
   status: "Pending" | "Completed";
 };
 
-const useEditTask = ({ editTask, tasks }: EditTaskProps) => {
-    const navigate = useNavigate();
+const useEditTask = ({ editTask }: EditTaskProps) => {
+  const { tasks } = useTasksContext();
+  const navigate = useNavigate();
   const { id } = useParams();
 
   const currentID = Number(id);

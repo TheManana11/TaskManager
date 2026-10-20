@@ -1,12 +1,10 @@
-import { useState, type Dispatch, type SetStateAction } from "react";
-import type { Task, TaskFilter } from "../../types/task";
+import { useState } from "react";
+import type { TaskFilter } from "../../types/task";
+import useTasksContext from "../../context/useTasksContext";
 
-type TasksProps = {
-  tasks: Task[];
-  setTasks: Dispatch<SetStateAction<Task[]>>;
-};
 
-const useTasks = ({ tasks, setTasks }: TasksProps) => {
+const useTasks = () => {
+  const { tasks } = useTasksContext();
   const [filter, setFilter] = useState<TaskFilter>("All");
 
   const filteredTasks = tasks.filter((task) => {
@@ -25,6 +23,7 @@ const useTasks = ({ tasks, setTasks }: TasksProps) => {
     filter,
     setFilter,
     filteredTasks,
+    tasks,
   };
 }
 

@@ -5,12 +5,11 @@ import useEditTask from "./useEditTask";
 
 type EditTaskProps = {
   editTask: (task: Task) => void;
-  tasks: Task[];
 };
 
 
-const EditTask = ({ editTask, tasks }: EditTaskProps) => {
-  const { register, handleSubmit, errors, onSubmitForm } = useEditTask({ editTask, tasks });
+const EditTask = ({ editTask }: EditTaskProps) => {
+  const { register, handleSubmit, errors, onSubmitForm } = useEditTask({ editTask });
 
   return (
     <main className="create-task-page">

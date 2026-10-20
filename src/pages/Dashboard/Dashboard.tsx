@@ -1,19 +1,12 @@
 
-import {  type Dispatch, type SetStateAction } from "react";
 import { FiCalendar, FiCheckCircle, FiClock, FiPlus, FiArrowRight } from "react-icons/fi";
 import TaskCard from "../../components/TaskCard/TaskCard";
-import type { Task } from "../../types/task";
 import "./styles.css";
 import useDashboard from "./useDashboard";
 
-type DashboardProps = {
-  tasks: Task[];
-  setTasks: Dispatch<SetStateAction<Task[]>>;
-};
+const Dashboard = () => {
 
-const Dashboard = ({ tasks, setTasks }: DashboardProps) => {
-
-  const{ navigate, todaysTasks, completedTasks, pendingTasks, handleToggleTask, handleDeleteTask } = useDashboard({ tasks, setTasks });
+  const{ navigate, todaysTasks, completedTasks, pendingTasks, handleToggleTask, handleDeleteTask, tasks } = useDashboard();
   
   return (
     <main className="dashboard-container">
