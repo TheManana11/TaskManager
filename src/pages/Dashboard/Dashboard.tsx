@@ -1,17 +1,10 @@
 
-import { useNavigate } from "react-router-dom";
-import { useMemo, type Dispatch, type SetStateAction } from "react";
-import {
-  FiCalendar,
-  FiCheckCircle,
-  FiClock,
-  FiPlus,
-  FiArrowRight,
-} from "react-icons/fi";
-
+import {  type Dispatch, type SetStateAction } from "react";
+import { FiCalendar, FiCheckCircle, FiClock, FiPlus, FiArrowRight } from "react-icons/fi";
 import TaskCard from "../../components/TaskCard/TaskCard";
 import type { Task } from "../../types/task";
 import "./styles.css";
+import useDashboard from "./useDashboard";
 
 type DashboardProps = {
   tasks: Task[];
@@ -19,50 +12,9 @@ type DashboardProps = {
 };
 
 const Dashboard = ({ tasks, setTasks }: DashboardProps) => {
-  const navigate = useNavigate();
 
-  const todayString = useMemo(() => {
-    const today = new Date();
-
-    return [
-      today.getFullYear(),
-      String(today.getMonth() + 1).padStart(2, "0"),
-      String(today.getDate()).padStart(2, "0"),
-    ].join("-");
-  }, []);
-
-  const todaysTasks = tasks.filter(
-    (task) => task.dueDate === todayString
-  );
-
-  const completedTasks = tasks.filter(
-    (task) => task.status === "Completed"
-  ).length;
-
-  const pendingTasks = tasks.filter(
-    (task) => task.status === "Pending"
-  ).length;
-
-  const handleToggleTask = (id: number): void => {
-    setTasks((currentTasks) =>
-      currentTasks.map((task) =>
-        task.id === id
-          ? {
-              ...task,
-              status:
-                task.status === "Completed" ? "Pending" : "Completed",
-            }
-          : task
-      )
-    );
-  };
-
-  const handleDeleteTask = (id: number): void => {
-    setTasks((currentTasks) =>
-      currentTasks.filter((task) => task.id !== id)
-    );
-  };
-
+  const{ navigate, todaysTasks, completedTasks, pendingTasks, handleToggleTask, handleDeleteTask } = useDashboard({ tasks, setTasks });
+  
   return (
     <main className="dashboard-container">
       <header className="dashboard-header">

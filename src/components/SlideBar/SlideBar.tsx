@@ -20,7 +20,7 @@ const SlideBar = () => {
         <nav className="sidebar-nav">
           <ul>
             <li>
-              <NavLink to="/dashboard" className={({ isActive }) =>
+              <NavLink to="/dashboard" end className={({ isActive }) =>
                 isActive ? "nav-link active" : "nav-link"
               }>
                 <IoMdHome />

@@ -1,44 +1,12 @@
 
-import {
-  FiCheck,
-  FiEye,
-  FiLock,
-  FiMail,
-  FiUser,
-  FiArrowRight,
-  FiClipboard,
-  FiTarget,
-  FiTrendingUp,
-} from "react-icons/fi";
-
+import { FiCheck, FiEye, FiLock, FiMail, FiUser, FiArrowRight, FiClipboard, FiTarget, FiTrendingUp } from "react-icons/fi";
 import "./styles.css";
+import useSignUp from "./useSignUp";
 
-import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-import { signupSchema, type SignupFormValues } from '../../schemas/signupSchema';
 
 const Signup = () => {
 
-  const navigate = useNavigate();
-
-  const {
-  register,
-  handleSubmit,
-  formState: { errors },
-  reset,
-} = useForm<SignupFormValues>({
-  resolver: zodResolver(signupSchema),
-  mode: "onTouched",
-});
-
-const onSubmit = (data: SignupFormValues) => {
-  console.log("Signup data:", data);
-  reset();
-  navigate("/dashboard");
-};
-
+  const { register, handleSubmit, errors, onSubmit } = useSignUp();
 
   return (
     <main className="signup-page">

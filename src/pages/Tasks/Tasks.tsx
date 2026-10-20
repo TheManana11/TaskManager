@@ -1,11 +1,14 @@
 
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { type Dispatch, type SetStateAction } from "react";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { NavLink } from "react-router-dom";
 
 import TaskCard from "../../components/TaskCard/TaskCard";
-import type { Task, TaskFilter } from "../../types/task";
+import type { Task } from "../../types/task";
 import "./styles.css";
+
+import useDashboard from '../Dashboard/useDashboard'
+import useTasks from "./useTasks";
 
 type TasksProps = {
   tasks: Task[];
@@ -13,47 +16,9 @@ type TasksProps = {
 };
 
 const Tasks = ({ tasks, setTasks }: TasksProps) => {
-  const [filter, setFilter] = useState<TaskFilter>("All");
 
-  const handleToggleTask = (id: number): void => {
-    setTasks((currentTasks) =>
-      currentTasks.map((task) =>
-        task.id === id
-          ? {
-              ...task,
-              status:
-                task.status === "Completed" ? "Pending" : "Completed",
-            }
-          : task
-      )
-    );
-  };
-
-  const handleDeleteTask = (id: number): void => {
-    setTasks((currentTasks) =>
-      currentTasks.filter((task) => task.id !== id)
-    );
-  };
-
-  const filteredTasks = tasks.filter((task) => {
-    if (filter === "Pending") {
-      return task.status === "Pending";
-    }
-
-    if (filter === "Completed") {
-      return task.status === "Completed";
-    }
-
-    return true;
-  });
-
-  const pendingCount = tasks.filter(
-    (task) => task.status === "Pending"
-  ).length;
-
-  const completedCount = tasks.filter(
-    (task) => task.status === "Completed"
-  ).length;
+  const { handleToggleTask, handleDeleteTask, pendingTasks: pendingCount, completedTasks: completedCount } = useDashboard({tasks, setTasks});
+  const { filter, setFilter, filteredTasks } = useTasks({ tasks, setTasks });
 
   return (
     <div className="tasks-container">

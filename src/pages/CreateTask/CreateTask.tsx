@@ -1,51 +1,17 @@
 
-import { Link, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 import type { Task } from "../../types/task";
-import {
-  FiArrowLeft,
-  FiCalendar,
-  FiCheckCircle,
-  FiFlag,
-  FiFileText,
-} from "react-icons/fi";
+import { FiArrowLeft, FiCalendar, FiCheckCircle, FiFlag, FiFileText } from "react-icons/fi";
 import "./styles.css";
-
-type TaskFormValues = {
-  title: string;
-  description: string;
-  dueDate: string;
-  priority: "Low" | "Medium" | "High";
-  status: "Pending" | "Completed";
-};
+import useCreateTask from "./useCreateTask";
 
 type CreateTaskProps = {
   addTask: (task: Omit<Task, "id">) => void;
 };
 
 const CreateTask = ({ addTask }: CreateTaskProps) => {
-  const navigate = useNavigate();
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<TaskFormValues>({
-    defaultValues: {
-      title: "",
-      description: "",
-      dueDate: "",
-      priority: "Medium",
-      status: "Pending",
-    },
-  });
-
-  const onSubmitForm = (data: TaskFormValues): void => {
-    addTask(data);
-    reset();
-    navigate("/dashboard/tasks");
-  };
+  const { register, handleSubmit, onSubmitForm, errors } = useCreateTask({ addTask });
 
   return (
     <main className="create-task-page">

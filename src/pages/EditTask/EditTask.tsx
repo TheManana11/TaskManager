@@ -1,77 +1,16 @@
-
-import { useEffect } from "react";
-import { Link, useNavigate, useParams, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import type { Task } from "../../types/task";
-import {
-  FiArrowDownLeft,
-  FiCalendar,
-  FiCheckCircle,
-  FiFileText,
-  FiFlag,
-} from "react-icons/fi";
-import { useForm } from "react-hook-form";
+import { FiArrowDownLeft, FiCalendar, FiCheckCircle, FiFileText, FiFlag } from "react-icons/fi";
+import useEditTask from "./useEditTask";
 
 type EditTaskProps = {
   editTask: (task: Task) => void;
   tasks: Task[];
 };
 
-type TaskFormValues = {
-  title: string;
-  description: string;
-  dueDate: string;
-  priority: "Low" | "Medium" | "High";
-  status: "Pending" | "Completed";
-};
 
 const EditTask = ({ editTask, tasks }: EditTaskProps) => {
-  const navigate = useNavigate();
-  const { id } = useParams();
-
-  const currentID = Number(id);
-
-  const currentTask = tasks.find((task) => task.id === currentID);
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<TaskFormValues>({
-    defaultValues: {
-      title: "",
-      description: "",
-      dueDate: "",
-      priority: "Medium",
-      status: "Pending",
-    },
-  });
-
-  useEffect(() => {
-    if (currentTask) {
-      reset({
-        title: currentTask.title,
-        description: currentTask.description,
-        dueDate: currentTask.dueDate,
-        priority: currentTask.priority,
-        status: currentTask.status,
-      });
-    }
-  }, [currentTask, reset]);
-
-  if (!id || !Number.isInteger(currentID) || !currentTask) {
-    return <Navigate to="/dashboard/tasks" replace />;
-  }
-
-  const onSubmitForm = (data: TaskFormValues): void => {
-    const updatedTask: Task = {
-      id: currentID,
-      ...data,
-    };
-
-    editTask(updatedTask);
-    navigate("/dashboard/tasks");
-  };
+  const { register, handleSubmit, errors, onSubmitForm } = useEditTask({ editTask, tasks });
 
   return (
     <main className="create-task-page">
