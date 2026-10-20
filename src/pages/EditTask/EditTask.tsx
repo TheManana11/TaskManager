@@ -1,15 +1,9 @@
 import { Link } from "react-router-dom";
-import type { Task } from "../../types/task";
 import { FiArrowDownLeft, FiCalendar, FiCheckCircle, FiFileText, FiFlag } from "react-icons/fi";
 import useEditTask from "./useEditTask";
 
-type EditTaskProps = {
-  editTask: (task: Task) => void;
-};
-
-
-const EditTask = ({ editTask }: EditTaskProps) => {
-  const { register, handleSubmit, errors, onSubmitForm } = useEditTask({ editTask });
+const EditTask = () => {
+  const { register, handleSubmit, errors, onSubmitForm } = useEditTask();
 
   return (
     <main className="create-task-page">

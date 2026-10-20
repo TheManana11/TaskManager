@@ -1,27 +1,25 @@
 import { useNavigate, useParams } from "react-router-dom";
-import type { Task } from "../../types/task";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
 import useTasksContext from "../../context/useTasksContext";
+import useTaskContext from "../../context/useTasksContext";
 
-type EditTaskProps = {
-  editTask: (task: Task) => void;
-};
+const useEditTask = () => {
+  const { dispatch } = useTaskContext();
+  const { tasks } = useTasksContext();
+  const navigate = useNavigate();
+  const { id } = useParams();
 
-type TaskFormValues = {
+  const currentID = Number(id);
+
+  type TaskFormValues = {
+  id: number;
   title: string;
   description: string;
   dueDate: string;
   priority: "Low" | "Medium" | "High";
   status: "Pending" | "Completed";
 };
-
-const useEditTask = ({ editTask }: EditTaskProps) => {
-  const { tasks } = useTasksContext();
-  const navigate = useNavigate();
-  const { id } = useParams();
-
-  const currentID = Number(id);
 
   const currentTask = tasks.find((task) => task.id === currentID);
 
@@ -57,12 +55,7 @@ const useEditTask = ({ editTask }: EditTaskProps) => {
   }
 
   const onSubmitForm = (data: TaskFormValues): void => {
-    const updatedTask: Task = {
-      id: currentID,
-      ...data,
-    };
-
-    editTask(updatedTask);
+    dispatch({ type: "UpdateTask", task: {...data, id: currentID} });
     navigate("/dashboard/tasks");
   };
 

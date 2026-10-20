@@ -4,7 +4,7 @@ import useTasksContext from "../../context/useTasksContext";
 
 
 const useTasks = () => {
-  const { tasks } = useTasksContext();
+  const { tasks, dispatch } = useTasksContext();
   const [filter, setFilter] = useState<TaskFilter>("All");
 
   const filteredTasks = tasks.filter((task) => {

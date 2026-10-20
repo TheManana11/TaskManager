@@ -5,33 +5,8 @@ import Tasks from "./pages/Tasks/Tasks";
 import CreateTask from "./pages/CreateTask/CreateTask";
 import EditTask from "./pages/EditTask/EditTask";
 import Signup from './pages/Signup/SignUp';
-import type { Task } from "./types/task";
-import useTasksContext from "./context/useTasksContext";
 
 const App = () => {
-  const { tasks, setTasks } = useTasksContext();
-  
-  const addTask = (task: Omit<Task, "id">): void => {
-    const newId =
-      Math.max(0, ...tasks.map((existingTask) => existingTask.id)) + 1;
-
-    const newTask: Task = {
-      ...task,
-      id: newId,
-    };
-
-    setTasks((currentTasks) => [...currentTasks, newTask]);
-  };
-
-  const editTask = (task: Task): void => {
-    setTasks((currentTasks) =>
-      currentTasks.map((currentTask) =>
-        currentTask.id === task.id
-          ? { ...currentTask, ...task }
-          : currentTask
-      )
-    );
-  };
 
   return (
     <BrowserRouter>
@@ -51,12 +26,12 @@ const App = () => {
 
           <Route
             path="create-task"
-            element={<CreateTask addTask={addTask} />}
+            element={<CreateTask />}
           />
 
           <Route
             path="edit-task/:id"
-            element={<EditTask editTask={editTask} />}
+            element={<EditTask  />}
           />
         </Route>
       </Routes>

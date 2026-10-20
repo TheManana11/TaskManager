@@ -1,11 +1,10 @@
-import { useMemo, type Dispatch, type SetStateAction } from "react";
+import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import type { Task } from "../../types/task";
 import useTasksContext from "../../context/useTasksContext";
 
 
 const useDashboard = () => {
-    const { tasks, setTasks } = useTasksContext();
+    const { tasks, dispatch } = useTasksContext();
     const navigate = useNavigate();
     
       const todayString = useMemo(() => {
@@ -31,23 +30,11 @@ const useDashboard = () => {
       ).length;
     
       const handleToggleTask = (id: number): void => {
-        setTasks((currentTasks: Task[]) =>
-          currentTasks.map((task) =>
-            task.id === id
-              ? {
-                  ...task,
-                  status:
-                    task.status === "Completed" ? "Pending" : "Completed",
-                }
-              : task
-          )
-        );
+        dispatch({ type: "ToggleTaskStatus", id:  id  });
       };
     
       const handleDeleteTask = (id: number): void => {
-        setTasks((currentTasks: Task[]) =>
-          currentTasks.filter((task) => task.id !== id)
-        );
+        dispatch({ type: "DeleteTask", id:  id  });
       };
 
       return{

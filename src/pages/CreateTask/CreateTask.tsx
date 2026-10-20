@@ -1,17 +1,12 @@
-
 import { Link } from "react-router-dom";
-import type { Task } from "../../types/task";
 import { FiArrowLeft, FiCalendar, FiCheckCircle, FiFlag, FiFileText } from "react-icons/fi";
 import "./styles.css";
 import useCreateTask from "./useCreateTask";
 
-type CreateTaskProps = {
-  addTask: (task: Omit<Task, "id">) => void;
-};
 
-const CreateTask = ({ addTask }: CreateTaskProps) => {
+const CreateTask = () => {
 
-  const { register, handleSubmit, onSubmitForm, errors } = useCreateTask({ addTask });
+  const { register, handleSubmit, onSubmitForm, errors } = useCreateTask();
 
   return (
     <main className="create-task-page">

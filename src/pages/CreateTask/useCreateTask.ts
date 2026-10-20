@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
-import type { Task } from "../../types/task";
 import { useNavigate } from "react-router-dom";
+import useTasksContext from "../../context/useTasksContext";
 
 type TaskFormValues = {
   title: string;
@@ -10,12 +10,10 @@ type TaskFormValues = {
   status: "Pending" | "Completed";
 };
 
-type CreateTaskProps = {
-  addTask: (task: Omit<Task, "id">) => void;
-};
 
-const useCreateTask = ({ addTask }: CreateTaskProps) => {
-    const navigate = useNavigate();
+const useCreateTask = () => {
+  const navigate = useNavigate();
+  const { dispatch } = useTasksContext();
 
   const {
     register,
@@ -33,7 +31,7 @@ const useCreateTask = ({ addTask }: CreateTaskProps) => {
   });
 
   const onSubmitForm = (data: TaskFormValues): void => {
-    addTask(data);
+    dispatch({ type: "AddTask", task: data });
     reset();
     navigate("/dashboard/tasks");
   };

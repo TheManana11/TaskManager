@@ -1,7 +1,7 @@
 
 import type { Task } from "../types/task";
 
-type TaskAction =
+export type TaskAction =
    {
       type: "AddTask";
       task: Omit<Task, "id">;
@@ -15,11 +15,11 @@ type TaskAction =
       id: number;
     }
   | {
-      type: "UpdateTask";
+      type: "UpdateTask",
       task: Task;
     };
 
-const taskReducer = (state: Task[], action: TaskAction): Task[] => {
+export const taskReducer = (state: Task[], action: TaskAction): Task[] => {
   switch (action.type) {
     case "AddTask": {
       const newId =
@@ -56,5 +56,3 @@ const taskReducer = (state: Task[], action: TaskAction): Task[] => {
       return state;
   }
 };
-
-export default taskReducer;

@@ -1,14 +1,14 @@
 import { useContext } from "react";
-import { TasksContext } from "./tasksContext";
+import { TasksContext } from "./TasksContext";
 
 const useTasksContext = () => {
     const context = useContext(TasksContext);
     if(!context){
         throw new Error("useDashboard must be used within a TasksContextProvider");
     }
-    const { tasks, setTasks } = context;
+    const { tasks, dispatch } = context;
 
-    return { tasks, setTasks };
+    return { tasks, dispatch };
 }
 
 export default useTasksContext;

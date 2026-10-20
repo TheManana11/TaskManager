@@ -1,7 +1,8 @@
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useReducer, type ReactNode } from "react";
 import type { Task } from "../types/task";
-import { TasksContext } from "./tasksContext";
+import { TasksContext } from "./TasksContext";
+import { taskReducer } from "../reducer/taskReducer";
 
 const initialTasks: Task[] = [
   {
@@ -74,21 +75,22 @@ type TaskProviderProps = {
   children: ReactNode;
 };
 
-const TasksContextProvider = ({ children }: TaskProviderProps) => {
-  const [tasks, setTasks] = useState<Task[]>(() => {
+const getInitialTasks = (): Task[] => {
     const savedTasks = localStorage.getItem("Tasks");
 
-    return savedTasks
-      ? (JSON.parse(savedTasks) as Task[])
-      : initialTasks;
-  });
+    return savedTasks ? (JSON.parse(savedTasks) as Task[]) : initialTasks;
+  };
+
+const TasksContextProvider = ({ children }: TaskProviderProps) => {
+  
+  const[tasks, dispatch] = useReducer(taskReducer, undefined, getInitialTasks);
 
   useEffect(() => {
     localStorage.setItem("Tasks", JSON.stringify(tasks));
   }, [tasks]);
 
   return (
-    <TasksContext.Provider value={{ tasks, setTasks }}>
+    <TasksContext.Provider value={{ tasks, dispatch }}>
       {children}
     </TasksContext.Provider>
   );
