@@ -5,6 +5,8 @@ import Tasks from "./pages/Tasks/Tasks";
 import CreateTask from "./pages/CreateTask/CreateTask";
 import EditTask from "./pages/EditTask/EditTask";
 import Signup from './pages/Signup/SignUp';
+import Posts from "./pages/Posts/Posts";
+import CreatePost from "./pages/CreatePost/CreatePost";
 
 const App = () => {
 
@@ -33,6 +35,8 @@ const App = () => {
             path="edit-task/:id"
             element={<EditTask  />}
           />
+          <Route path="/dashboard/posts" element={<Posts />} />
+          <Route path="/dashboard/create-post" element={<CreatePost />} />
         </Route>
       </Routes>
     </BrowserRouter>
