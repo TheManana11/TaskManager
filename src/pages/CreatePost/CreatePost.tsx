@@ -2,14 +2,17 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { FiArrowLeft, FiFileText, FiSend } from "react-icons/fi";
 import type { CreatePostForm } from "../../types/posts";
+import { useAddPostMutation } from "../../services/postAPI";
 import "./styles.css";
 
 function CreatePost() {
   const navigate = useNavigate();
+  const [addPost, { isLoading: isAdding, isSuccess, isError, error}] = useAddPostMutation();
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<CreatePostForm>({
     defaultValues: {
@@ -19,8 +22,14 @@ function CreatePost() {
     },
   });
 
-  const onSubmit = (data: CreatePostForm) => {
-    
+  const onSubmit = async (data: CreatePostForm) => {
+    try{
+      const newPost = await addPost(data).unwrap();
+      console.log("Post created successfully:", newPost);
+      reset();
+    }catch (error) {
+      console.error("Failed to create post:", error);
+    }
     console.log(data);
   };
 
@@ -145,11 +154,16 @@ function CreatePost() {
           <button
             type="submit"
             className="create-post-form__submit"
+            disabled={isAdding}
           >
             <FiSend size={16} />
-            Create Post
+            {isAdding ? "Creating..." : "Create Post"}
           </button>
+
+          {isError && <p>Failed to add new post.</p> }
+          {isSuccess &&  <p>Post added successfully!</p> }
         </div>
+        
       </form>
     </main>
   );

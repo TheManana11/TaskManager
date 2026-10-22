@@ -2,10 +2,19 @@ import { Link } from "react-router-dom";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import PostCard from "../../components/PostCard/PostCard";
 import type { Post } from "../../types/posts";
+import { useGetPostsQuery } from "../../services/postAPI";
 import "./styles.css";
 
 function Posts() {
-  const posts: Post[] = [];
+  const { data: posts = [] as Post[], isLoading, isError, error } = useGetPostsQuery(2);
+
+  if (isLoading) {
+    return <p>Loading posts...</p>;
+  }
+
+  if(isError) {
+    return <p>Error fetching posts: {error.toString()}</p>;
+  }
 
   return (
     <main className="posts-page">
